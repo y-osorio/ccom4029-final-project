@@ -246,7 +246,12 @@ public class Table extends JFrame implements ActionListener
 				i++;
 			}
 
-			if (Hand.findSet(cardArray) != null) // If card array contains a set, continue.
+			if (cards.length == 1) { // If card array contains a set, continue.
+				layCard((Card)cards[0]);
+				p1Hand.removeElement(cards[0]);
+			}
+
+			else if (Hand.findSet(cardArray) != null) // If card array contains a set, continue.
 				for(Card y: cardArray) {
 					layCard(y);
 					p1Hand.removeElement(y);
