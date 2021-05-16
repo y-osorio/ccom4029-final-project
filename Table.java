@@ -9,6 +9,11 @@ import java.util.*;
 */
 public class Table extends JFrame implements ActionListener
 {
+	Boolean layable = false;
+	Boolean turn = true;
+	Boolean p1Takeable = true;
+	Boolean p2Takeable = true;
+
 	final static int numDealtCards = 9;
 	JPanel player1;
 	JPanel player2;
@@ -200,21 +205,27 @@ public class Table extends JFrame implements ActionListener
 	public void actionPerformed(ActionEvent e)
 	{
 		Object src = e.getSource();
-		if(p1Deck == src|| p2Deck == src){
+		if((p1Deck == src && p1Takeable) || (p2Deck == src && p2Takeable)){
+			layable = true;
 
 			Card card = cardDeck.dealCard();
 
 			if (card != null){
-				if(src == p1Deck)
+				if(src == p1Deck) {
 					p1Hand.addElement(card);
-				else
+					p1Takeable = false;
+				}
+				else {
 					p2Hand.addElement(card);
+					p2Takeable = false;
+				}
 			}
 			if(cardDeck.getSizeOfDeck() == 0)
 				deckPile.setIcon(new ImageIcon(Card.directory + "blank.gif"));
-
 		}
-		if(p1Stack == src || p2Stack == src){
+
+		if((p1Stack == src && p1Takeable) || (p2Stack == src && p2Takeable)){
+			layable = true;
 
 			Card card = stackDeck.removeCard();
 
@@ -225,10 +236,14 @@ public class Table extends JFrame implements ActionListener
 				else
 					topOfStack.setIcon(new ImageIcon(Card.directory + "blank.gif"));
 
-				if(p1Stack == src)
+				if(p1Stack == src) {
 					p1Hand.addElement(card);
-				else
+					p1Takeable = false;
+				}
+				else {
 					p2Hand.addElement(card);
+					p2Takeable = false;
+				}
 
 
 			}
@@ -236,7 +251,7 @@ public class Table extends JFrame implements ActionListener
 		}
 
 
-		if(p1Lay == src){
+		if(p1Lay == src && turn && layable){
 			Object [] cards = p1HandPile.getSelectedValues();
 			Card [] cardArray = new Card [cards.length];
 
@@ -249,42 +264,52 @@ public class Table extends JFrame implements ActionListener
 			if (cards.length == 1) { // If card array contains a set, continue.
 				layCard((Card)cards[0]);
 				p1Hand.removeElement(cards[0]);
+				layable = false;
+				turn = false;
+				p2Takeable = true;
 			}
 
-			else if (Hand.findSet(cardArray) != null) // If card array contains a set, continue.
-				for(Card y: cardArray) {
+			else if (Hand.findSet(cardArray) != null) {// If card array contains a set, continue.
+				for (Card y : cardArray) {
 					layCard(y);
 					p1Hand.removeElement(y);
 				}
+				layable = false;
+				turn = false;
+				p2Takeable = true;
+			}
 		}
 
-
-//		else if(p1Lay == src){
-//			Object [] cards = p1HandPile.getSelectedValues();
-//
-//			if (cards != null) // If card array contains a set, continue.
-//				for(int i = 0; i < cards.length; i++)
-//				{
-//					Card card = (Card)cards[i];
-//					layCard(card);
-//					p1Hand.removeElement(card);
-//				}
-//		}
-
-
-		if(p2Lay == src){
+		if(p2Lay == src && !turn && layable){
 			Object [] cards = p2HandPile.getSelectedValues();
-			if (cards != null)
-				for(int i = 0; i < cards.length; i++)
-				{
-					Card card = (Card)cards[i];
-					layCard(card);
-					p2Hand.removeElement(card);
+			Card [] cardArray = new Card [cards.length];
+
+			int i = 0;
+			for (Object x: cards) {
+				cardArray[i] = (Card)x;
+				i++;
+			}
+
+			if (cards.length == 1) { // If card array contains a set, continue.
+				layCard((Card)cards[0]);
+				p2Hand.removeElement(cards[0]);
+				layable = false;
+				turn = true;
+				p1Takeable = true;
+			}
+
+			else if (Hand.findSet(cardArray) != null) {// If card array contains a set, continue.
+				for (Card y : cardArray) {
+					layCard(y);
+					p2Hand.removeElement(y);
 				}
+				layable = false;
+				turn = true;
+				p1Takeable = true;
+			}
 		}
 
-
-		if(p1LayOnStack == src){
+		if(p1LayOnStack == src && turn && layable){
 			int [] num  = p1HandPile.getSelectedIndices();
 			if (num.length == 1)
 			{
@@ -295,23 +320,30 @@ public class Table extends JFrame implements ActionListener
 					Card card = (Card)obj;
 					stackDeck.addCard(card);
 					topOfStack.setIcon(card.getCardImage());
+
+					layable = false;
+					turn = false;
+					p2Takeable = true;
 				}
 			}
 		}
 
 
-		if(p2LayOnStack == src){
+		if(p2LayOnStack == src && !turn && layable){
 			int [] num  = p2HandPile.getSelectedIndices();
 			if (num.length == 1)
 			{
 				Object obj = p2HandPile.getSelectedValue();
 				if (obj != null)
 				{
-
 					p2Hand.removeElement(obj);
 					Card card = (Card)obj;
 					stackDeck.addCard(card);
 					topOfStack.setIcon(card.getCardImage());
+
+					layable = false;
+					turn = true;
+					p1Takeable = true;
 				}
 			}
 		}
