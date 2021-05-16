@@ -35,34 +35,22 @@ public class Hand implements HandInterface {
    * @return  returns Card [] of Cards found in deck or <code>-null </code> if not found.
    */
    public static Card [] findSet(Card [] c) {
-//       Card [] cardSet = new Card[c.length];
+
+       int count;
+       LinkedList<Character> rankList = new LinkedList<Character>();
 
        for (int i = 0; i < c.length; i++) {
-           if ((c.length < 3) && (c[0].getRank() != c[i].getRank())) {
-               return null;
+           rankList.add(c[i].getRank());
+       }
+
+       for (int i = 0; i < Card.rank.length; i++) {
+           count = Collections.frequency(rankList, Card.rank[i]);
+           if (count >= 3) {
+               return c;
            }
        }
 
-       return c;
-
-
-//       Iterator it = hand.iterator();
-//       Card [] frq;
-//
-//       while(it.hasNext()) {
-//           int count;
-//           for (int i = 0; i < Card.rank.length; i++) {
-//               count = Collections.frequency(c, Card.rank[i]); // Card.rank[i]
-//               if (count >= 3) {
-//                   System.out.println("You can lay a set of " + s);
-//               }
-//               else {
-//                   return null;
-//               }
-//           }
-//       }
-//
-//	    return null;
+	    return null;
    }
 
   /**

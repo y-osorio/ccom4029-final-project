@@ -106,7 +106,7 @@ public class Table extends JFrame implements ActionListener
 		p1Stack.addActionListener(this);
 		p1Deck = new JButton("Deck ");
 		p1Deck.addActionListener(this);
-		p1Lay = new JButton("Lay Set"); // "Lay"
+		p1Lay = new JButton("Lay"); // "Lay"
 		p1Lay.addActionListener(this);
 		p1LayOnStack = new JButton("LayOnStack");
 		p1LayOnStack.addActionListener(this);
@@ -254,7 +254,7 @@ public class Table extends JFrame implements ActionListener
 		}
 
 
-//		if(p1Lay == src){
+//		else if(p1Lay == src){
 //			Object [] cards = p1HandPile.getSelectedValues();
 //
 //			if (cards != null) // If card array contains a set, continue.
@@ -324,9 +324,12 @@ public class Table extends JFrame implements ActionListener
 		char suit = card.getSuit();
 		int suitIndex =  Card.getSuitIndex(suit);
 		int rankIndex =  Card.getRankIndex(rank);
-		//setPanels[rankIndex].array[suitIndex].setText(card.toString());
+		setPanels[rankIndex].array[suitIndex].setText(card.toString());
 		System.out.println("laying " + card);
 		setPanels[rankIndex].array[suitIndex].setIcon(card.getCardImage());
+	}
+
+	void laySet(Card [] cardSet) {
 	}
 
 }
@@ -336,7 +339,7 @@ class HandPanel extends JPanel
 
 	public HandPanel(String name,JList hand, JButton stack, JButton deck, JButton lay, JButton layOnStack)
 	{
-		//model = hand.createSelectionModel();
+//		model = hand.createSelectionModel();
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		add(Box.createGlue()); // ******
